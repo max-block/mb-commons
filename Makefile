@@ -10,7 +10,7 @@ dist: clean
 
 
 upload: dist
-	twine upload -r pypi dist/*
+	twine upload dist/*
 	g at v$(VERSION)
 
 

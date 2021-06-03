@@ -26,17 +26,18 @@ setuptools.setup(
         "pydash==5.0.0",
         "wrapt==1.12.1",
         "python-dateutil==2.8.1",
+        "pymongo==3.11.4",
+        "pydantic==1.8.2",
     ],
     extras_require={
         "dev": [
             "pytest==6.2.4",
             "python-dotenv==0.17.1",
-            "pre-commit==2.12.1",
+            "pre-commit==2.13.0",
             "pytest-xdist==2.2.1",
             "wheel==0.36.2",
             "twine==3.4.1",
             "black==20.8b1",
         ],
-        "mongo": ["pymongo==3.11.4", "pydantic==1.8.2"],
     },
 )
