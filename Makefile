@@ -12,7 +12,3 @@ dist: clean
 upload: dist
 	twine upload dist/*
 	g at v$(VERSION)
-
-
-install:
-	pip install -Ue .[mongo,dev]
