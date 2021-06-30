@@ -23,7 +23,7 @@ setuptools.setup(
         "requests==2.25.1",
         "PySocks==1.7.1",
         "sorcery==0.2.1",
-        "pydash==5.0.0",
+        "pydash==5.0.1",
         "wrapt==1.12.1",
         "python-dateutil==2.8.1",
         "pymongo==3.11.4",
@@ -32,12 +32,11 @@ setuptools.setup(
     extras_require={
         "dev": [
             "pytest==6.2.4",
-            "python-dotenv==0.17.1",
+            "python-dotenv==0.18.0",
             "pre-commit==2.13.0",
-            "pytest-xdist==2.2.1",
+            "pytest-xdist==2.3.0",
             "wheel==0.36.2",
             "twine==3.4.1",
-            "black==20.8b1",
         ],
     },
 )
