@@ -11,4 +11,5 @@ dist: clean
 
 upload: dist
 	twine upload dist/*
-	g at v$(VERSION)
+	git tag -a 'v$(VERSION)' -m 'v$(VERSION)'
+	git push origin v$(VERSION)

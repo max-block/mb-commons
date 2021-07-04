@@ -181,6 +181,9 @@ class MongoCollection(Generic[T]):
     def update_one(self, query: QueryType, update: QueryType) -> UpdateResult:
         return self.collection.update_one(query, update)
 
+    def update_many(self, query: QueryType, update: QueryType, upsert=False) -> UpdateResult:
+        return self.collection.update_many(query, update, upsert=upsert)
+
     def delete_many(self, query: QueryType) -> DeleteResult:
         return self.collection.delete_many(query)
 
