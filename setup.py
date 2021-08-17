@@ -32,10 +32,10 @@ setuptools.setup(
     extras_require={
         "dev": [
             "pytest==6.2.4",
-            "python-dotenv==0.18.0",
-            "pre-commit==2.13.0",
+            "python-dotenv==0.19.0",
+            "pre-commit==2.14.0",
             "pytest-xdist==2.3.0",
-            "wheel==0.36.2",
+            "wheel==0.37.0",
             "twine==3.4.2",
         ],
     },

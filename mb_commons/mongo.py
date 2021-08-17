@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import OrderedDict
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any, Generic, Optional, Tuple, Type, TypeVar, Union
@@ -75,6 +76,7 @@ class PropertyBaseModel(BaseModel):
 
 class MongoModel(PropertyBaseModel):
     __collection__: str = ""
+    __validator__: Optional[dict] = None
     __indexes__: list[Union[IndexModel, str]] = []
 
     def to_doc(self) -> dict:
@@ -86,7 +88,7 @@ class MongoModel(PropertyBaseModel):
 
     @classmethod
     def init_collection(cls, database: Database) -> MongoCollection[T]:
-        return MongoCollection.init(database, cls, cls.__collection__, cls.__indexes__)
+        return MongoCollection.init(database, cls)
 
 
 class DecimalCodec(TypeCodec):
@@ -130,21 +132,27 @@ PKType = Union[str, ObjectIdStr, int]
 
 
 class MongoCollection(Generic[T]):
-    def __init__(
-        self,
-        model_class: Type[T],
-        database: Database,
-        col_name: str,
-        indexes: Optional[list[Union[IndexModel, str]]] = None,
-        wrap_object_str_id=True,
-    ):
+    def __init__(self, model: Type[T], database: Database, wrap_object_str_id: bool = True):
+        if not model.__collection__:
+            raise Exception("empty collection name")
+
         codecs = CodecOptions(type_registry=TypeRegistry([c() for c in [DecimalCodec]]))
-        self.collection = database.get_collection(col_name, codecs)
-        if indexes:
-            indexes = [parse_str_index_model(i) if isinstance(i, str) else i for i in indexes]
+        self.collection = database.get_collection(model.__collection__, codecs)
+        if model.__indexes__:
+            indexes = [parse_str_index_model(i) if isinstance(i, str) else i for i in model.__indexes__]
             self.collection.create_indexes(indexes)
-        self.model_class = model_class
-        self.wrap_object_id = model_class.__fields__["id"].type_ == ObjectIdStr and wrap_object_str_id
+
+        self.model_class = model
+        self.wrap_object_id = model.__fields__["id"].type_ == ObjectIdStr and wrap_object_str_id
+        if model.__validator__:
+            # if collection exists
+            if model.__collection__ in database.list_collection_names():
+                query = [("collMod", model.__collection__), ("validator", model.__validator__)]
+                res = database.command(OrderedDict(query))
+                if "ok" not in res:
+                    raise Exception("can't set schema validator")
+            else:
+                database.create_collection(model.__collection__, codec_options=codecs, validator=model.__validator__)
 
     def insert_one(self, doc: T) -> InsertOneResult:
         return self.collection.insert_one(doc.to_doc())
@@ -215,13 +223,8 @@ class MongoCollection(Generic[T]):
         return sort
 
     @staticmethod
-    def init(
-        database: Database,
-        model_class: Type[T],
-        collection_name: str,
-        indexes: list[IndexModel] = None,
-    ) -> MongoCollection[T]:
-        return MongoCollection(model_class, database, collection_name, indexes)
+    def init(database: Database, model_class: Type[T]) -> MongoCollection[T]:
+        return MongoCollection(model_class, database)
 
 
 def make_query(**kwargs) -> QueryType:
@@ -249,7 +252,3 @@ def parse_str_index_model(index: str) -> IndexModel:
     if unique:
         return IndexModel(keys, unique=True)
     return IndexModel(keys)
-
-
-if __name__ == "__main__":
-    pass
