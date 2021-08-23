@@ -23,3 +23,8 @@ def test_is_ok():
 def test_ok_or_error():
     assert Result(ok=123, error="bla bla").ok_or_error == "bla bla"
     assert Result(ok=123).ok_or_error == 123
+
+
+def test_result_str():
+    res = Result(ok=123)
+    assert res.__str__() == "{'ok': 123, 'error': None, 'data': None}"
