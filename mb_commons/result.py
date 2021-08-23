@@ -54,5 +54,5 @@ class Result(Generic[T]):
     def new_error(self, new_error: str) -> Result:
         return Result(error=new_error, data=self._data)
 
-    def __str__(self):
+    def __repr__(self):
         return str(self.dict())
