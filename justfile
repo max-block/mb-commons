@@ -1,3 +1,4 @@
+set dotenv-load := false
 version := `python3 setup.py --version | tr '+' '-'`
 
 
