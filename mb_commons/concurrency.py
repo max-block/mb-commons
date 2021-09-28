@@ -52,12 +52,14 @@ class ParallelTasks:
                 self.timeout_error = True
 
 
-def synchronized_parameter(arg_index=0):
+def synchronized_parameter(arg_index=0, skip_if_locked=False):
     locks = defaultdict(Lock)
 
     def outer(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            if skip_if_locked and locks[args[arg_index]].locked():
+                return
             try:
                 with locks[args[arg_index]]:
                     return func(*args, **kwargs)

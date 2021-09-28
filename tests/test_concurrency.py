@@ -93,6 +93,25 @@ def test_synchronized_parameters():
     assert (end_time - start_time).seconds == 2
 
 
+def test_synchronized_parameters_skip_if_locked():
+    counter = 0
+
+    @synchronized_parameter(skip_if_locked=True)
+    def task(_param, _second_param=None):
+        nonlocal counter
+        time.sleep(1)
+        counter += 1
+
+    tasks = ParallelTasks()
+    tasks.add_task("task1", task, args=(1,))
+    tasks.add_task("task2", task, args=(1, 4))
+    tasks.add_task("task3", task, args=(2,))
+    tasks.add_task("task4", task, args=(3,))
+    tasks.execute()
+
+    assert counter == 3
+
+
 def test_scheduler():
     logger = logging.getLogger()
     scheduler = Scheduler(logger)
