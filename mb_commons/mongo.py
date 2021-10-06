@@ -77,7 +77,7 @@ class PropertyBaseModel(BaseModel):
 class MongoModel(PropertyBaseModel):
     __collection__: str = ""
     __validator__: Optional[dict] = None
-    __indexes__: list[Union[IndexModel, str]] = []
+    __indexes__: list[IndexModel | str] = []
 
     def to_doc(self) -> dict:
         doc = self.dict()
