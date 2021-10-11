@@ -20,3 +20,6 @@ def test_utc_delta():
 def test_parse_date():
     res = parse_date("2018-01-06 22:36:00")
     assert res == datetime(2018, 1, 6, 22, 36)
+
+    res = parse_date("2018-01-06 22:36:00 PDT", ignoretz=True)
+    assert res == datetime(2018, 1, 6, 22, 36)

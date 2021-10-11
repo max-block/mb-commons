@@ -28,5 +28,5 @@ def utc_delta(
     return datetime.utcnow() + timedelta(**params)
 
 
-def parse_date(value: str) -> datetime:
-    return parser.parse(value)
+def parse_date(value: str, ignoretz=False) -> datetime:
+    return parser.parse(value, ignoretz=ignoretz)
