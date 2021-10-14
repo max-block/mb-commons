@@ -211,6 +211,9 @@ class MongoCollection(Generic[T]):
     def exists(self, query: QueryType) -> bool:
         return self.collection.count_documents(query) > 0
 
+    def drop_collection(self):
+        return self.collection.drop()
+
     def _pk(self, pk: PKType):
         return ObjectId(pk) if self.wrap_object_id else pk
 
