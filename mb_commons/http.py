@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from json import JSONDecodeError
 from typing import Any, Optional
 
@@ -37,12 +37,12 @@ class HResponse:
     def to_error(self, error=None):
         from mb_commons import Result
 
-        return Result(error=error if error else self.error, data=self)
+        return Result(error=error if error else self.error, data=asdict(self))
 
     def to_ok(self, result: Any):
         from mb_commons import Result
 
-        return Result(ok=result, data=self)
+        return Result(ok=result, data=asdict(self))
 
     def is_error(self):
         return self.error is not None
