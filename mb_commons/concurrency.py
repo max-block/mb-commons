@@ -20,9 +20,10 @@ class ParallelTasks:
         args: Tuple
         kwargs: dict
 
-    def __init__(self, max_workers=5, timeout=None):
+    def __init__(self, max_workers=5, timeout=None, thread_name_prefix="parallel_tasks"):
         self.max_workers = max_workers
         self.timeout = timeout
+        self.thread_name_prefix = thread_name_prefix
         self.tasks: list[ParallelTasks.Task] = []
         self.exceptions: dict[str, Exception] = {}
         self.error = False
@@ -36,7 +37,7 @@ class ParallelTasks:
         self.tasks.append(ParallelTasks.Task(key, func, args, kwargs))
 
     def execute(self) -> None:
-        with ThreadPoolExecutor(self.max_workers) as executor:
+        with ThreadPoolExecutor(self.max_workers, thread_name_prefix=self.thread_name_prefix) as executor:
             future_to_key = {executor.submit(task.func, *task.args, **task.kwargs): task.key for task in self.tasks}
             try:
                 result_map = concurrent.futures.as_completed(future_to_key, timeout=self.timeout)

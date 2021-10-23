@@ -26,7 +26,7 @@ setuptools.setup(
         "pydash==5.1.0",
         "wrapt==1.13.2",
         "python-dateutil==2.8.2",
-        "pymongo==3.12.0",
+        "pymongo==3.12.1",
         "pydantic==1.8.2",
     ],
     extras_require={
