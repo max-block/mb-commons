@@ -34,11 +34,7 @@ class PropertyBaseModel(BaseModel):
 
     @classmethod
     def get_properties(cls):
-        return [
-            prop
-            for prop in dir(cls)
-            if isinstance(getattr(cls, prop), property) and prop not in ("__values__", "fields")
-        ]
+        return [prop for prop in dir(cls) if isinstance(getattr(cls, prop), property) and prop not in ("__values__", "fields")]
 
     def dict(
         self,
