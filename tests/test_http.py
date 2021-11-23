@@ -55,14 +55,14 @@ def test_connection_error():
 def test_to_ok():
     res = hrequest("https://httpbin.org/ip")
 
-    assert res.to_ok(res.json).data.http_code == res.http_code
+    assert res.to_ok(res.json).data["http_code"] == res.http_code
     assert res.to_ok(res.json).is_ok()
     assert res.to_ok(res.json).ok == res.json
 
 
 def test_to_error():
     res = hrequest("https://httpbin222.org/ip")
-    assert res.to_error().data.http_code == res.http_code
+    assert res.to_error().data["http_code"] == res.http_code
     assert res.to_error().is_error()
     assert res.to_error().error.startswith("connection_error")
     assert res.is_connection_error()
